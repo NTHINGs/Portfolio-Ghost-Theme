@@ -1,4 +1,12 @@
 {{!< default}}
+<section id="loading">
+    <div class="container">
+        <a class="tomato" href="#" id="skip-button">Skip</a>
+        <br>
+        <span class="tomato">></span>
+        <span id="command" class="tomato"></span>
+    </div>
+</section>
 
 {{! The comment above "< default" means - insert everything in this file into
     the {body} of the default.hbs template, which contains our header/footer. }}
@@ -24,11 +32,13 @@
     <article class="{{post_class}}">
         <header class="post-header">
             <span class="post-meta"><time datetime="{{date format='YYYY-MM-DD'}}">{{date format="DD MMM YYYY"}}</time> {{#if tags}}en {{tags}}{{/if}}</span>
-            <h2 class="post-title"><a href="{{url}}">{{{title}}}</a></h2>
-            
+            <a href="{{url}}">
+                <h2 class="post-title">{{{title}}}</h2>
+            </a>
             <!--<a href="{{url}}#disqus_thread"></a>-->
         </header>
         <section class="post-excerpt">
+            {{#if feature_image}} <img src="{{img_url feature_image}}" class="front-page-image"> {{/if}}
             <p>{{excerpt}}&hellip;</p>
         </section>
     </article>
@@ -39,16 +49,36 @@
     {{pagination}}
 
     <script type="text/javascript">
-        var disqus_shortname = d_id;
-        
-        /* * * DON'T EDIT BELOW THIS LINE * * */
-        (function () {
-        var s = document.createElement('script'); s.async = true;
-        s.type = 'text/javascript';
-        s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
-        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-        }());
+        if (localStorage.introViewed) {
+            $("#loading").hide();
+        } else {
+            localStorage.introViewed = true;
+            $("#loading").show();
+            $("#site-head").hide();
+            $("main.content").hide();
+        }
 
-
+        $("#skip-button").click(function () {
+            $("#loading").hide();
+            $("#site-head").show();
+            $("main.content").show();
+        });
+        var typed = new Typed('#command', {
+            strings: ['run portafolio^500 `</br>Installing components...` ^1000 `</br>Fetching from source...` ^2000 `</br>Building...` ^3000 ',
+                '`<div class="ascii-art">`' +
+                '`██╗    ██╗███████╗██╗      ██████╗ ██████╗ ███╗   ███╗███████╗\n`' +
+                '`██║    ██║██╔════╝██║     ██╔════╝██╔═══██╗████╗ ████║██╔════╝\n`' +
+                '`██║ █╗ ██║█████╗  ██║     ██║     ██║   ██║██╔████╔██║█████╗  \n`' +
+                '`██║███╗██║██╔══╝  ██║     ██║     ██║   ██║██║╚██╔╝██║██╔══╝  \n`' +
+                '`╚███╔███╔╝███████╗███████╗╚██████╗╚██████╔╝██║ ╚═╝ ██║███████╗\n`' +
+                '` ╚══╝╚══╝ ╚══════╝╚══════╝ ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚══════╝\n`' +
+                '`</div>` ^500'],
+            typeSpeed: 50,
+            onComplete: (self) => {
+                $("#loading").hide();
+                $("#site-head").show();
+                $("main.content").show();
+            }
+        });
     </script>
 </main>
